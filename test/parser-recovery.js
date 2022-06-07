@@ -4,8 +4,6 @@ var jsonata = require('../src/jsonata');
 var assert = require('assert');
 var chai = require("chai");
 var expect = chai.expect;
-var chaiAsPromised = require("chai-as-promised");
-chai.use(chaiAsPromised);
 
 describe('Invoke parser with valid expression', function() {
     describe('Account.Order[0]', function() {
@@ -475,6 +473,5 @@ describe('Invoke parser with incomplete expression', function() {
             });
         });
     });
-
 });
 

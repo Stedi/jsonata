@@ -118,49 +118,49 @@ describe('Handle chained functions that end in promises', function() {
         counter: counter
     };
 
-    it('basic function that returns a thenable', function() {
+    it('basic async function', function() {
         var data = {};
         var expr = jsonata('$counter(5).value');
         return expect(expr.evaluate(data, bindings)).to.eventually.equal(5);
     });
 
-    it('basic function that returns a thenable, but invokes another function', function() {
+    it('basic async function, but invokes another function', function() {
         var data = {};
         var expr = jsonata('$counter(0).inc().value');
         return expect(expr.evaluate(data, bindings)).to.eventually.equal(1);
     });
 
-    it('basic function that returns a thenable, but invokes another function several times', function() {
+    it('basic async function, but invokes another function several times', function() {
         var data = {};
         var expr = jsonata('$counter(0).inc().inc().inc().inc().value');
         return expect(expr.evaluate(data, bindings)).to.eventually.equal(4);
     });
 
-    it('basic function that returns a thenable and part of a numeric expression', function() {
+    it('basic async function and part of a numeric expression', function() {
         var data = {};
         var expr = jsonata('$counter(3).value + 5');
         return expect(expr.evaluate(data, bindings)).to.eventually.equal(8);
     });
 
-    it('basic function that returns a thenable, but invokes another function several times and part of a numeric expression', function() {
+    it('basic async function, but invokes another function several times and part of a numeric expression', function() {
         var data = {};
         var expr = jsonata('$counter(0).inc().inc().inc().inc().value + 3');
         return expect(expr.evaluate(data, bindings)).to.eventually.equal(7);
     });
 
-    it('basic function that returns a thenable, but invokes another function - nested', function() {
+    it('basic async function, but invokes another function - nested', function() {
         var data = {};
         var expr = jsonata('$counter($counter(3).inc().inc().value).inc().value');
         return expect(expr.evaluate(data, bindings)).to.eventually.equal(6);
     });
 
-    it('basic function that returns a thenable, then invokes a built-in function', function() {
+    it('basic async function, then invokes a built-in function', function() {
         var data = {};
         var expr = jsonata('$counter(3).inc().value.$string()');
         return expect(expr.evaluate(data, bindings)).to.eventually.equal('4');
     });
 
-    it('basic function that returns a thenable, but invokes a non-existent function', function() {
+    it('basic async function, but invokes a non-existent function', function() {
         var data = {};
         var expr = jsonata('$counter(2).inc().foo().value');
         return expect(expr.evaluate(data, bindings)).to.be.rejected;
