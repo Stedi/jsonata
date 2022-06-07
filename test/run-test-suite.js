@@ -42,7 +42,7 @@ datasetnames.forEach((name) => {
 describe("JSONata Test Suite", () => {
     // Iterate over all groups of tests
     groups.forEach(group => {
-        let filenames = fs.readdirSync(path.join(__dirname, "test-suite", "groups", group)).filter((name) => name.endsWith("performance.json"));
+        let filenames = fs.readdirSync(path.join(__dirname, "test-suite", "groups", group)).filter((name) => name.endsWith(".json"));
         // Read JSON file containing all cases for this group
         let cases = [];
         filenames.forEach(name => {
