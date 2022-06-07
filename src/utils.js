@@ -217,19 +217,19 @@ const utils = (() => {
     }
 
     return {
-        createSequence,
-        getFunctionArity,
-        isArrayOfNumbers,
-        isArrayOfStrings,
-        isAsyncIterable,
-        isDeepEqual,
-        isFunction,
-        isIterable,
-        isLambda,
         isNumeric,
-        isPromise,
+        isArrayOfStrings,
+        isArrayOfNumbers,
+        createSequence,
         isSequence,
+        isFunction,
+        isLambda,
+        isIterable,
+        getFunctionArity,
+        isDeepEqual,
         stringToArray,
+        isAsyncIterable,
+        isPromise
     };
 })();
 
