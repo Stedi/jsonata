@@ -4,6 +4,8 @@ var jsonata = require('../src/jsonata');
 var assert = require('assert');
 var chai = require("chai");
 var expect = chai.expect;
+var chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
 
 describe('Invoke parser with valid expression', function() {
     describe('Account.Order[0]', function() {
@@ -308,87 +310,87 @@ describe('Invoke parser with incomplete expression', function() {
             var expr = jsonata('$inputSource[0].UnstructuredAnswers^()[0].Text', { recover: true });
             var ast = expr.ast();
             var expected_ast = {
-                    "type": "path",
-                    "steps": [
-                        {
-                            "value": "inputSource",
-                            "type": "variable",
-                            "position": 12,
-                            "predicate": [
-                                {
-                                    "type": "filter",
-                                    "expr": {
-                                        "value": 0,
-                                        "type": "number",
-                                        "position": 14
-                                    },
-                                    "position": 13
+                "type": "path",
+                "steps": [
+                    {
+                        "value": "inputSource",
+                        "type": "variable",
+                        "position": 12,
+                        "predicate": [
+                            {
+                                "type": "filter",
+                                "expr": {
+                                    "value": 0,
+                                    "type": "number",
+                                    "position": 14
+                                },
+                                "position": 13
+                            }
+                        ]
+                    },
+                    {
+                        "value": "UnstructuredAnswers",
+                        "type": "name",
+                        "position": 35
+                    },
+                    {
+                        "type": "sort",
+                        "terms": [
+                            {
+                                "descending": false,
+                                "expression": {
+                                    "code": "S0211",
+                                    "token": ")",
+                                    "position": 38,
+                                    "remaining": [
+                                        {
+                                            "type": "operator",
+                                            "value": "[",
+                                            "position": 39
+                                        },
+                                        {
+                                            "type": "number",
+                                            "value": 0,
+                                            "position": 40
+                                        },
+                                        {
+                                            "type": "operator",
+                                            "value": "]",
+                                            "position": 41
+                                        },
+                                        {
+                                            "type": "operator",
+                                            "value": ".",
+                                            "position": 42
+                                        },
+                                        {
+                                            "type": "name",
+                                            "value": "Text",
+                                            "position": 46
+                                        }
+                                    ],
+                                    "type": "error",
+                                    "predicate": [
+                                        {
+                                            "type": "filter",
+                                            "expr": {
+                                                "type": "error",
+                                                "error": {
+                                                    "code": "S0207",
+                                                    "position": 46,
+                                                    "token": "(end)"
+                                                }
+                                            },
+                                            "position": 39
+                                        }
+                                    ]
                                 }
-                            ]
-                        },
-                        {
-                            "value": "UnstructuredAnswers",
-                            "type": "name",
-                            "position": 35
-                        },
-                        {
-                            "type": "sort",
-                            "terms": [
-                                {
-                                    "descending": false,
-                                    "expression": {
-                                        "code": "S0211",
-                                        "token": ")",
-                                        "position": 38,
-                                        "remaining": [
-                                            {
-                                                "type": "operator",
-                                                "value": "[",
-                                                "position": 39
-                                            },
-                                            {
-                                                "type": "number",
-                                                "value": 0,
-                                                "position": 40
-                                            },
-                                            {
-                                                "type": "operator",
-                                                "value": "]",
-                                                "position": 41
-                                            },
-                                            {
-                                                "type": "operator",
-                                                "value": ".",
-                                                "position": 42
-                                            },
-                                            {
-                                                "type": "name",
-                                                "value": "Text",
-                                                "position": 46
-                                            }
-                                        ],
-                                        "type": "error",
-                                        "predicate": [
-                                            {
-                                                "type": "filter",
-                                                "expr": {
-                                                    "type": "error",
-                                                    "error": {
-                                                        "code": "S0207",
-                                                        "position": 46,
-                                                        "token": "(end)"
-                                                    }
-                                                },
-                                                "position": 39
-                                            }
-                                        ]
-                                    }
-                                }
-                            ],
-                            "position": 36
-                        }
-                    ]
-                };
+                            }
+                        ],
+                        "position": 36
+                    }
+                ]
+            };
             var errors = expr.errors();
             var expected_errors = [
                 {
@@ -467,10 +469,9 @@ describe('Invoke parser with incomplete expression', function() {
         describe('Account.', function() {
             it('should return ast', function() {
                 var expr = jsonata('Account.', { recover: true });
-                expect(function () {
-                    expr.evaluate({});
-                }).to.throw()
-                    .to.deep.contain({position: 0, code: 'S0500'});
+                return expect(expr.evaluate({}))
+                    .to.be.rejected
+                    .to.eventually.deep.contain({position: 0, code: 'S0500'});
             });
         });
     });

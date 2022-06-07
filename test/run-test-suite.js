@@ -10,16 +10,18 @@ var fs = require("fs");
 var path = require("path");
 var jsonata = require("../src/jsonata");
 var chai = require("chai");
+var chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
 var expect = chai.expect;
 
 let groups = fs.readdirSync(path.join(__dirname, "test-suite", "groups")).filter((name) => !name.endsWith(".json"));
 
 /**
- * Simple function to read in JSON
- * @param {string} dir - Directory containing JSON file
- * @param {string} file - Name of JSON file (relative to directory)
- * @returns {Object} Parsed JSON object
- */
+  * Simple function to read in JSON
+  * @param {string} dir - Directory containing JSON file
+  * @param {string} file - Name of JSON file (relative to directory)
+  * @returns {Object} Parsed JSON object
+  */
 function readJSON(dir, file) {
     try {
         return JSON.parse(fs.readFileSync(path.join(__dirname, dir, file)).toString());
@@ -40,7 +42,7 @@ datasetnames.forEach((name) => {
 describe("JSONata Test Suite", () => {
     // Iterate over all groups of tests
     groups.forEach(group => {
-        let filenames = fs.readdirSync(path.join(__dirname, "test-suite", "groups", group)).filter((name) => name.endsWith(".json"));
+        let filenames = fs.readdirSync(path.join(__dirname, "test-suite", "groups", group)).filter((name) => name.endsWith("performance.json"));
         // Read JSON file containing all cases for this group
         let cases = [];
         filenames.forEach(name => {
@@ -112,29 +114,25 @@ describe("JSONata Test Suite", () => {
                             // First is that we have an undefined result.  So, check
                             // to see if the result we get from evaluation is undefined
                             let result = expr.evaluate(dataset, testcase.bindings);
-                            expect(result).to.deep.equal(undefined);
+                            return expect(result).to.eventually.deep.equal(undefined);
                         } else if ("result" in testcase) {
                             // Second is that a (defined) result was provided.  In this case,
                             // we do a deep equality check against the expected result.
                             let result = expr.evaluate(dataset, testcase.bindings);
-                            expect(result).to.deep.equal(testcase.result);
+                            return expect(result).to.eventually.deep.equal(testcase.result);
                         } else if ("error" in testcase) {
                             // If an error was expected,
                             // we do a deep equality check against the expected error structure.
-                            expect(function() {
-                                expr.evaluate(dataset, testcase.bindings);
-                            })
-                                .to.throw()
-                                .to.deep.contain(testcase.error);
+                            return expect(expr.evaluate(dataset, testcase.bindings))
+                                .to.be.rejected
+                                .to.eventually.deep.contain(testcase.error);
                         } else if ("code" in testcase) {
                             // Finally, if a `code` field was specified, we expected the
                             // evaluation to fail and include the specified code in the
                             // thrown exception.
-                            expect(function() {
-                                expr.evaluate(dataset, testcase.bindings);
-                            })
-                                .to.throw()
-                                .to.deep.contain({ code: testcase.code });
+                            return expect(expr.evaluate(dataset, testcase.bindings))
+                                .to.be.rejected
+                                .to.eventually.deep.contain({ code: testcase.code });
                         } else {
                             // If we get here, it means there is something wrong with
                             // the test case data because there was nothing to check.
@@ -148,23 +146,23 @@ describe("JSONata Test Suite", () => {
 });
 
 /**
- * Protect the process/browser from a runnaway expression
- * i.e. Infinite loop (tail recursion), or excessive stack growth
- *
- * @param {Object} expr - expression to protect
- * @param {Number} timeout - max time in ms
- * @param {Number} maxDepth - max stack depth
- */
+  * Protect the process/browser from a runnaway expression
+  * i.e. Infinite loop (tail recursion), or excessive stack growth
+  *
+  * @param {Object} expr - expression to protect
+  * @param {Number} timeout - max time in ms
+  * @param {Number} maxDepth - max stack depth
+  */
 function timeboxExpression(expr, timeout, maxDepth) {
     var depth = 0;
     var time = Date.now();
 
     var checkRunnaway = function() {
-        if (depth > maxDepth) {
+        if (maxDepth > 0 && depth > maxDepth) {
             // stack too deep
             throw {
                 message:
-                    "Stack overflow error: Check for non-terminating recursive function.  Consider rewriting as tail-recursive.",
+                     "Stack overflow error: Check for non-terminating recursive function.  Consider rewriting as tail-recursive.",
                 stack: new Error().stack,
                 code: "U1001"
             };
@@ -180,24 +178,26 @@ function timeboxExpression(expr, timeout, maxDepth) {
     };
 
     // register callbacks
-    expr.assign("__evaluate_entry", function() {
+    expr.assign("__evaluate_entry", function(expr, input, env) {
+        if (env.isParallelCall) return;
         depth++;
         checkRunnaway();
     });
-    expr.assign("__evaluate_exit", function() {
+    expr.assign("__evaluate_exit", function(expr, input, env) {
+        if (env.isParallelCall) return;
         depth--;
         checkRunnaway();
     });
 }
 
 /**
- * Based on the collection of datasets and the information provided as part of the testcase,
- * determine what input data to use in the case (may return undefined).
- *
- * @param {Object} datasets Object mapping dataset names to JS values
- * @param {Object} testcase Testcase data read from testcase file
- * @returns {any} The input data to use when evaluating the jsonata expression
- */
+  * Based on the collection of datasets and the information provided as part of the testcase,
+  * determine what input data to use in the case (may return undefined).
+  *
+  * @param {Object} datasets Object mapping dataset names to JS values
+  * @param {Object} testcase Testcase data read from testcase file
+  * @returns {any} The input data to use when evaluating the jsonata expression
+  */
 function resolveDataset(datasets, testcase) {
     if ("data" in testcase) {
         return testcase.data;
