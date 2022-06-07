@@ -10,9 +10,9 @@ var fs = require("fs");
 var path = require("path");
 var jsonata = require("../src/jsonata");
 var chai = require("chai");
+var expect = chai.expect;
 var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
-var expect = chai.expect;
 
 let groups = fs.readdirSync(path.join(__dirname, "test-suite", "groups")).filter((name) => !name.endsWith(".json"));
 

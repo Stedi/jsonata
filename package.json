@@ -13,7 +13,7 @@
   "scripts": {
     "pretest": "npm run lint",
     "mocha": "node ./node_modules/istanbul/lib/cli.js cover --report cobertura --report html ./node_modules/mocha/bin/_mocha -- \"test/**/*.js\"",
-    "test": "mocha \"test/run-test-suite.js\"",
+    "test": "npm run mocha",
     "posttest": "npm run check-coverage && npm run browserify && npm run minify && npm run build-es5",
     "build-es5": "npm run mkdir-dist && npm run regenerator && npm run browserify-es5 && npm run minify-es5",
     "check-coverage": "istanbul check-coverage -statement 100 -branch 100 -function 100 -line 100",
