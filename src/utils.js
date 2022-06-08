@@ -191,9 +191,9 @@ const utils = (() => {
     }
 
     /**
-         * @param {Object} arg - expression to test
-         * @returns {boolean} - true if it is a promise
-         */
+     * @param {Object} arg - expression to test
+     * @returns {boolean} - true if it is a promise
+     */
     function isPromise(arg) {
         return (
             typeof arg === 'object' &&
