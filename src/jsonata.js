@@ -24,18 +24,18 @@ var parseSignature = require('./signature');
 var jsonata = (function() {
     'use strict';
 
-    var createSequence = utils.createSequence;
-    var getFunctionArity = utils.getFunctionArity;
-    var isArrayOfNumbers = utils.isArrayOfNumbers;
-    var isArrayOfStrings = utils.isArrayOfStrings;
-    var isAsyncIterable = utils.isAsyncIterable;
-    var isDeepEqual = utils.isDeepEqual;
-    var isFunction = utils.isFunction;
-    var isIterable = utils.isIterable;
-    var isLambda = utils.isLambda;
     var isNumeric = utils.isNumeric;
-    var isPromise = utils.isPromise;
+    var isArrayOfStrings = utils.isArrayOfStrings;
+    var isArrayOfNumbers = utils.isArrayOfNumbers;
+    var createSequence = utils.createSequence;
     var isSequence = utils.isSequence;
+    var isFunction = utils.isFunction;
+    var isLambda = utils.isLambda;
+    var isIterable = utils.isIterable;
+    var isAsyncIterable = utils.isAsyncIterable;
+    var isPromise = utils.isPromise;
+    var getFunctionArity = utils.getFunctionArity;
+    var isDeepEqual = utils.isDeepEqual;
 
     // Start of Evaluator code
 
