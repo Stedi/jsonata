@@ -17,11 +17,11 @@ var expect = chai.expect;
 let groups = fs.readdirSync(path.join(__dirname, "test-suite", "groups")).filter((name) => !name.endsWith(".json"));
 
 /**
-  * Simple function to read in JSON
-  * @param {string} dir - Directory containing JSON file
-  * @param {string} file - Name of JSON file (relative to directory)
-  * @returns {Object} Parsed JSON object
-  */
+ * Simple function to read in JSON
+ * @param {string} dir - Directory containing JSON file
+ * @param {string} file - Name of JSON file (relative to directory)
+ * @returns {Object} Parsed JSON object
+ */
 function readJSON(dir, file) {
     try {
         return JSON.parse(fs.readFileSync(path.join(__dirname, dir, file)).toString());
@@ -146,13 +146,13 @@ describe("JSONata Test Suite", () => {
 });
 
 /**
-  * Protect the process/browser from a runnaway expression
-  * i.e. Infinite loop (tail recursion), or excessive stack growth
-  *
-  * @param {Object} expr - expression to protect
-  * @param {Number} timeout - max time in ms
-  * @param {Number} maxDepth - max stack depth
-  */
+ * Protect the process/browser from a runnaway expression
+ * i.e. Infinite loop (tail recursion), or excessive stack growth
+ *
+ * @param {Object} expr - expression to protect
+ * @param {Number} timeout - max time in ms
+ * @param {Number} maxDepth - max stack depth
+ */
 function timeboxExpression(expr, timeout, maxDepth) {
     var depth = 0;
     var time = Date.now();
@@ -162,7 +162,7 @@ function timeboxExpression(expr, timeout, maxDepth) {
             // stack too deep
             throw {
                 message:
-                     "Stack overflow error: Check for non-terminating recursive function.  Consider rewriting as tail-recursive.",
+                    "Stack overflow error: Check for non-terminating recursive function.  Consider rewriting as tail-recursive.",
                 stack: new Error().stack,
                 code: "U1001"
             };
@@ -191,13 +191,13 @@ function timeboxExpression(expr, timeout, maxDepth) {
 }
 
 /**
-  * Based on the collection of datasets and the information provided as part of the testcase,
-  * determine what input data to use in the case (may return undefined).
-  *
-  * @param {Object} datasets Object mapping dataset names to JS values
-  * @param {Object} testcase Testcase data read from testcase file
-  * @returns {any} The input data to use when evaluating the jsonata expression
-  */
+ * Based on the collection of datasets and the information provided as part of the testcase,
+ * determine what input data to use in the case (may return undefined).
+ *
+ * @param {Object} datasets Object mapping dataset names to JS values
+ * @param {Object} testcase Testcase data read from testcase file
+ * @returns {any} The input data to use when evaluating the jsonata expression
+ */
 function resolveDataset(datasets, testcase) {
     if ("data" in testcase) {
         return testcase.data;
