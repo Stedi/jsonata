@@ -950,8 +950,8 @@ var jsonata = (function() {
             }
         }
 
-         // iterate over the groups to evaluate the 'value' expression
-         let generators = await Promise.all(Object.keys(groups).map(async (key, idx) => {
+        // iterate over the groups to evaluate the 'value' expression
+        let generators = await Promise.all(Object.keys(groups).map(async (key, idx) => {
             let entry = groups[key];
             var context = entry.data;
             var env = environment;
