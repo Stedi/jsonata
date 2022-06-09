@@ -184,12 +184,12 @@ const utils = (() => {
     function isAsyncIterable(arg) {
         return (
             typeof arg === 'object' &&
-            arg !== null &&
-            asyncIteratorSymbol in arg &&
-            // istanbul ignore next
-            'next' in arg &&
-            // istanbul ignore next
-            typeof arg.next === 'function'
+                arg !== null &&
+                asyncIteratorSymbol in arg &&
+                // istanbul ignore next
+                'next' in arg &&
+                // istanbul ignore next
+                typeof arg.next === 'function'
         );
     }
 
