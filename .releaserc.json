@@ -5,6 +5,10 @@
       "prerelease": true,
       "range": "1.8.x",
       "channel": "fast"
+    },
+    {
+      "name": "master",
+      "release": true
     }
   ],
   "plugins": [
