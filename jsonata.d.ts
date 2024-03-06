@@ -20,7 +20,7 @@ declare namespace jsonata {
     steps?: ExprNode[];
     expressions?: ExprNode[];
     stages?: ExprNode[];
-    lhs?: ExprNode[];
+    lhs?: ExprNode;
     rhs?: ExprNode;
   }
 
