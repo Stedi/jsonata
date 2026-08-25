@@ -679,6 +679,7 @@ const dateTime = (function () {
         return (end - start) / (millisInADay * 7) + 1;
     };
 
+    // oxlint-disable-next-line complexity -- legacy date component dispatch, one branch per format component, complexity 33
     const getDateTimeFragment = (date, component) => {
         let componentValue;
         switch (component) {

@@ -318,7 +318,7 @@ const functions = (() => {
      * @returns {object} - structure that represents the match(es)
      */
     function* evaluateMatcher(matcher, str) {
-        var result = matcher.apply(this, [str]); // eslint-disable-line no-useless-call
+        var result = matcher.apply(this, [str]);
         if(isIterable(result)) {
             result = yield * result;
         }
@@ -559,7 +559,7 @@ const functions = (() => {
                 // Simply doing `new Buffer` at this point causes Browserify to pull
                 // in the entire Buffer browser library, which is large and unnecessary.
                 // Using `global.Buffer` defeats this.
-                return new global.Buffer.from(str, 'binary').toString('base64'); // eslint-disable-line new-cap
+                return new global.Buffer.from(str, 'binary').toString('base64');
             };
         return btoa(str);
     }
@@ -581,7 +581,7 @@ const functions = (() => {
                 // Simply doing `new Buffer` at this point causes Browserify to pull
                 // in the entire Buffer browser library, which is large and unnecessary.
                 // Using `global.Buffer` defeats this.
-                return new global.Buffer.from(str, 'base64').toString('binary'); // eslint-disable-line new-cap
+                return new global.Buffer.from(str, 'base64').toString('binary');
             };
         return atob(str);
     }
@@ -601,7 +601,7 @@ const functions = (() => {
         var returnVal;
         try {
             returnVal = encodeURIComponent(str);
-        } catch (e) {
+        } catch (_e) {
             throw {
                 code: "D3140",
                 stack: (new Error()).stack,
@@ -627,7 +627,7 @@ const functions = (() => {
         var returnVal;
         try {
             returnVal = encodeURI(str);
-        } catch (e) {
+        } catch (_e) {
             throw {
                 code: "D3140",
                 stack: (new Error()).stack,
@@ -653,7 +653,7 @@ const functions = (() => {
         var returnVal;
         try {
             returnVal = decodeURIComponent(str);
-        } catch (e) {
+        } catch (_e) {
             throw {
                 code: "D3140",
                 stack: (new Error()).stack,
@@ -679,7 +679,7 @@ const functions = (() => {
         var returnVal;
         try {
             returnVal = decodeURI(str);
-        } catch (e) {
+        } catch (_e) {
             throw {
                 code: "D3140",
                 stack: (new Error()).stack,
@@ -1497,7 +1497,7 @@ const functions = (() => {
      * @param {Function} func - predicate function
      * @returns {Array} Map array
      */
-    function* filter(arr, func) { // eslint-disable-line require-yield
+    function* filter(arr, func) {
         // undefined inputs always return undefined
         if (typeof arr === 'undefined') {
             return undefined;
@@ -1525,7 +1525,7 @@ const functions = (() => {
      * @param {Function} [func] - predicate function
      * @returns {*} Matching element
      */
-    function* single(arr, func) { // eslint-disable-line require-yield
+    function* single(arr, func) {
         // undefined inputs always return undefined
         if (typeof arr === 'undefined') {
             return undefined;
@@ -1917,7 +1917,8 @@ const functions = (() => {
                 };
             }
 
-            comp = function* (a, b) {  // eslint-disable-line require-yield
+            // oxlint-disable-next-line require-yield -- the caller invokes every comparator with `yield*`, so the default one must be a generator too
+            comp = function* (a, b) {
                 return a > b;
             };
         } else {

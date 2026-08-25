@@ -2,8 +2,6 @@
 
 var jsonata = require('../src/jsonata');
 var assert = require('assert');
-var chai = require("chai");
-var expect = chai.expect;
 
 describe('Invoke parser with custom RegexEngine param', function() {
 
@@ -20,7 +18,7 @@ describe('Invoke parser with custom RegexEngine param', function() {
     }
 
     it('should call RegexEngine param constructure during evaluation', function() {
-        var expr = jsonata('$replace(\"foo\", /bar/, \"baaz\")', { RegexEngine: RegexEngineSpy });
+        var expr = jsonata('$replace("foo", /bar/, "baaz")', { RegexEngine: RegexEngineSpy });
         expr.evaluate()
         assert.deepEqual(regexContentSpy.toString(), "/bar/g");
         assert.deepEqual(regexEvalSpy, "foo");

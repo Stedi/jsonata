@@ -46,6 +46,7 @@ var jsonata = (function() {
      * @param {Object} environment - Environment
      * @returns {*} Evaluated input data
      */
+    // oxlint-disable-next-line complexity -- legacy evaluator dispatch, one branch per expression type, complexity 42
     function* evaluate(expr, input, environment) {
         var result;
 
@@ -188,12 +189,10 @@ var jsonata = (function() {
             // if the first step is an explicit array constructor, then just evaluate that (i.e. don't iterate over a context array)
             if(ii === 0 && step.consarray) {
                 resultSequence = yield * evaluate(step, inputSequence, environment);
+            } else if(isTupleStream) {
+                tupleBindings = yield * evaluateTupleStep(step, inputSequence, tupleBindings, environment);
             } else {
-                if(isTupleStream) {
-                    tupleBindings = yield * evaluateTupleStep(step, inputSequence, tupleBindings, environment);
-                } else {
-                    resultSequence = yield * evaluateStep(step, inputSequence, environment, ii === expr.steps.length - 1);
-                }
+                resultSequence = yield * evaluateStep(step, inputSequence, environment, ii === expr.steps.length - 1);
             }
 
             if (!isTupleStream && (typeof resultSequence === 'undefined' || resultSequence.length === 0)) {
@@ -401,13 +400,15 @@ var jsonata = (function() {
         if (!Array.isArray(input)) {
             input = createSequence(input);
         }
+        var index;
+        var item;
         if (predicate.type === 'number') {
-            var index = Math.floor(predicate.value);  // round it down
+            index = Math.floor(predicate.value);  // round it down
             if (index < 0) {
                 // count in from end of array
                 index = input.length + index;
             }
-            var item = input[index];
+            item = input[index];
             if(typeof item !== 'undefined') {
                 if(Array.isArray(item)) {
                     results = item;
@@ -417,7 +418,7 @@ var jsonata = (function() {
             }
         } else {
             for (index = 0; index < input.length; index++) {
-                var item = input[index];
+                item = input[index];
                 var context = item;
                 var env = environment;
                 if(input.tupleStream) {
@@ -572,10 +573,9 @@ var jsonata = (function() {
      * Evaluate name object against input data
      * @param {Object} expr - JSONata expression
      * @param {Object} input - Input data to evaluate against
-     * @param {Object} environment - Environment
      * @returns {*} Evaluated input data
      */
-    function evaluateName(expr, input, environment) {
+    function evaluateName(expr, input) {
         // lookup the 'name' item in the input
         return fn.lookup(input, expr.value);
     }
@@ -959,7 +959,7 @@ var jsonata = (function() {
         for (key in groups) {
             entry = groups[key];
             var context = entry.data;
-            var env = environment;
+            env = environment;
             if (reduce) {
                 var tuple = reduceTupleStream(entry.data);
                 context = tuple['@'];
@@ -1180,7 +1180,7 @@ var jsonata = (function() {
 
         // sort the lhs array
         // use comparator function
-        var comparator = function*(a, b) { // eslint-disable-line require-yield
+        var comparator = function*(a, b) {
             // expr.terms is an array of order-by in priority order
             var comp = 0;
             for(var index = 0; comp === 0 && index < expr.terms.length; index++) {
