@@ -42,7 +42,7 @@ Signed-off-by: John Doe <john.doe@hisdomain.com>
 
 ### Coding standards
 
-Please ensure you follow the coding standards used through-out the existing code base. Coding standards are checked by ESLint. 100% test coverage must be maintained at all times.
+Please ensure you follow the coding standards used through-out the existing code base. Coding standards are checked by oxlint. 100% test coverage must be maintained at all times.
 
 ## Running tests
 

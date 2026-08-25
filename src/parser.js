@@ -115,6 +115,7 @@ const parser = (() => {
             };
         };
 
+        // oxlint-disable-next-line complexity -- legacy tokenizer, one branch per token kind, complexity 52
         var next = function (prefix) {
             if (position >= length) return null;
             var currentChar = path.charAt(position);
@@ -981,6 +982,7 @@ const parser = (() => {
         // This includes flattening the parts of the AST representing location paths,
         // converting them to arrays of steps which in turn may contain arrays of predicates.
         // following this, nodes containing '.' and '[' should be eliminated from the AST.
+        // oxlint-disable-next-line complexity -- legacy post-parse AST rewriter, one branch per node type, complexity 71
         var processAST = function (expr) {
             var result;
             switch (expr.type) {

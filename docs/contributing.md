@@ -30,7 +30,7 @@ To contribute changes to the JSONata code (or documentation), [fork the `jsonata
 
 _This section is incomplete_
 
-The tests use the `mocha` framework and can be executed by running `npm t` or `npm run test` which also runs `eslint` linting to check the code meets the formatting requirements of the project.
+The tests use the `mocha` framework and can be executed by running `npm t` or `npm run test` which also runs `oxlint` linting to check the code meets the formatting requirements of the project.
 
 ## Documentation
 
