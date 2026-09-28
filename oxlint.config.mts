@@ -35,5 +35,6 @@ export default defineConfig({
     // fork, so cosmetic renames across src/ would cost merge conflicts.
     // Promote to "error" in a dedicated change.
     "typescript/no-shadow": "off",
+    "anti-slop/no-runtime-typeof": "warn", // 204
   },
 });
